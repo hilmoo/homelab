@@ -7,16 +7,14 @@ tasks:
     vars:
       IP: "{{index .MATCH 0}}"
       USER: "{{index .MATCH 1}}"
-      IFACE: "{{index .MATCH 2}}"
-    cmd: nix develop .#init --command k3sup install --ip '{{.IP}}' --user '{{.USER}}' --ssh-key $HOME/.ssh/dummy --no-extras --k3s-extra-args "--node-ip '{{.IP}}' --advertise-address '{{.IP}}' --flannel-iface '{{.IFACE}}'"
+    cmd: nix develop .#init --command k3sup install --ip '{{.IP}}' --user '{{.USER}}' --ssh-key $HOME/.ssh/dummy --no-extras --k3s-extra-args "--node-ip '{{.IP}}' --advertise-address '{{.IP}}' --disable-network-policy --flannel-backend=none'"
 
   k3sup-agent:*:*:*:*:
     vars:
       IP: "{{index .MATCH 0}}"
       USER: "{{index .MATCH 1}}"
       SERVERIP: "{{index .MATCH 2}}"
-      IFACE: "{{index .MATCH 3}}"
-    cmd: nix develop .#init --command k3sup join --ip '{{.IP}}' --user '{{.USER}}' --server-ip '{{.SERVERIP}}' --ssh-key $HOME/.ssh/dummy  --k3s-extra-args "--node-ip '{{.IP}}' --flannel-iface '{{.IFACE}}'"
+    cmd: nix develop .#init --command k3sup join --ip '{{.IP}}' --user '{{.USER}}' --server-ip '{{.SERVERIP}}' --ssh-key $HOME/.ssh/dummy  --k3s-extra-args "--node-ip '{{.IP}}''"
 
   reconcile:
     cmd: flux reconcile source git flux-system

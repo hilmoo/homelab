@@ -20,6 +20,8 @@ spec:
         app.kubernetes.io/name: *app
         app.kubernetes.io/instance: *app
     spec:
+      nodeSelector:
+        type: agent-a
       initContainers:
         - name: test-pg
           image: ghcr.io/hilmoo/containers/wait-for-pg:latest

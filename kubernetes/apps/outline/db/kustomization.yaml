@@ -8,3 +8,4 @@ nameSuffix: -outline
 
 patches:
   - path: postgres-patch.yaml
+  - path: redis-patch.yaml

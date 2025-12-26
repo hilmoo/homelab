@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+
+spec:
+  template:
+    spec:
+      nodeSelector:
+        type: agent-a

@@ -1,0 +1,44 @@
+# SPDX-License-Identifier: MIT
+---
+- name: Create new VM
+  community.proxmox.proxmox_kvm:
+    timeout: 600
+    node: "{{ new_vm_create_proxmox_node }}"
+    api_host: "{{ new_vm_create_proxmox_api_host }}"
+    api_token_id: "{{ new_vm_create_proxmox_api_token_id }}"
+    api_token_secret: "{{ new_vm_create_proxmox_api_token_secret }}"
+    api_user: "{{ new_vm_create_proxmox_api_user }}"
+    vmid: "{{ new_vm_create_base_vmid }}"
+    clone: "template"
+    name: "{{ new_vm_create_name }}"
+    newid: "{{ new_vm_create_id }}"
+
+- name: Setup VM resources
+  community.proxmox.proxmox_kvm:
+    update: true
+    timeout: 600
+    node: "{{ new_vm_create_proxmox_node }}"
+    api_host: "{{ new_vm_create_proxmox_api_host }}"
+    api_token_id: "{{ new_vm_create_proxmox_api_token_id }}"
+    api_token_secret: "{{ new_vm_create_proxmox_api_token_secret }}"
+    api_user: "{{ new_vm_create_proxmox_api_user }}"
+    vmid: "{{ new_vm_create_id }}"
+    cores: "{{ new_vm_create_cores }}"
+    memory: "{{ new_vm_create_memory }}"
+    cicustom: "user=local:snippets/cloud-init.yml"
+    net:
+      net0: "virtio,bridge={{ new_vm_create_net0 }},firewall=1"
+    ipconfig:
+      ipconfig0: "ip=dhcp"
+    update_unsafe: true
+
+- name: Start VM
+  community.proxmox.proxmox_kvm:
+    node: pve
+    api_host: "{{ new_vm_create_proxmox_api_host }}"
+    api_token_id: "{{ new_vm_create_proxmox_api_token_id }}"
+    api_token_secret: "{{ new_vm_create_proxmox_api_token_secret }}"
+    api_user: "{{ new_vm_create_proxmox_api_user }}"
+    vmid: "{{ new_vm_create_id }}"
+    state: started
+  when: new_vm_create_start | bool

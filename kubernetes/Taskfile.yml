@@ -1,0 +1,68 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  k3sup-server:*:*:*:
+    vars:
+      IP: "{{index .MATCH 0}}"
+      USER: "{{index .MATCH 1}}"
+      IFACE: "{{index .MATCH 2}}"
+    cmd: nix develop .#init --command k3sup install --ip '{{.IP}}' --user '{{.USER}}' --ssh-key $HOME/.ssh/dummy --no-extras --k3s-extra-args "--node-ip '{{.IP}}' --advertise-address '{{.IP}}' --flannel-iface '{{.IFACE}}'"
+
+  k3sup-agent:*:*:*:*:
+    vars:
+      IP: "{{index .MATCH 0}}"
+      USER: "{{index .MATCH 1}}"
+      SERVERIP: "{{index .MATCH 2}}"
+      IFACE: "{{index .MATCH 3}}"
+    cmd: nix develop .#init --command k3sup join --ip '{{.IP}}' --user '{{.USER}}' --server-ip '{{.SERVERIP}}' --ssh-key $HOME/.ssh/dummy  --k3s-extra-args "--node-ip '{{.IP}}' --flannel-iface '{{.IFACE}}'"
+
+  reconcile:
+    cmd: flux reconcile source git flux-system
+
+  secret-sync:*:*:
+    vars:
+      NAME: "{{index .MATCH 0}}"
+      NAMESPACE: "{{index .MATCH 1}}"
+    cmds:
+      - kubectl annotate es {{.NAME}} force-sync=$(date +%s) --overwrite -n {{.NAMESPACE}}
+      - sleep 3
+
+  secret-get:*:*:
+    vars:
+      KEY: "{{index .MATCH 0}}"
+      NAMESPACE: "{{index .MATCH 1}}"
+    cmd: kubectl get secret {{.KEY}} -n {{.NAMESPACE}} -o jsonpath="{.data}" | jq -r 'to_entries[] | "\(.key)=\(.value|@base64d)"'
+
+  caddy-int:
+    cmds:
+      - bws secret edit f3d3e3dc-3e5d-4007-926a-b3bb0120b459 --value "$(cat ./infra/controller/internal/app/Caddyfile)"
+      - sleep 2
+      - kubectl annotate es caddy-secrets-int force-sync=$(date +%s) --overwrite -n caddy-int
+      - sleep 3
+      - kubectl delete pods --all -n caddy-int
+
+  caddy-ext:
+    cmds:
+      - bws secret edit 9cd32bc4-427b-4f52-9437-b3bb0176dc0f --value "$(cat ./infra/controller/external/app/Caddyfile)"
+      - sleep 2
+      - kubectl annotate es caddy-secrets-ext force-sync=$(date +%s) --overwrite -n caddy-ext
+      - sleep 3
+      - kubectl delete pods --all -n caddy-ext
+
+  gatus:
+    cmds:
+      - bws secret edit 725089ff-9a64-4119-85f9-b3bc002a0867 --value "$(cat ./apps/gatus/app/gatus.config.yaml)"
+      - sleep 2
+      - kubectl annotate es gatus-secrets force-sync=$(date +%s) --overwrite -n gatus
+      - sleep 3
+      - kubectl delete pods --all -n gatus
+
+  tes:*:
+    vars:
+      NAMESPACE: "{{index .MATCH 0}}"
+    cmd: kubectl -n {{.NAMESPACE}} run tmp-shell --rm -i --tty --image nicolaka/netshoot -- /bin/bash
+
+  apps-kustomize:
+    cmd: ./scripts/apps-to-kustomization.sh

@@ -1,0 +1,19 @@
+#cloud-config
+manage_etc_hosts: true
+hostname: {{ upload_cicustom_create_name }}
+user: {{ upload_cicustom_create_ciuser }}
+password: {{ upload_cicustom_create_cipassword }}
+chpasswd:
+  expire: false
+package_upgrade: true
+package_reboot_if_required: true
+locale: en_US.UTF-8
+timezone: Asia/Jakarta
+packages:
+  - qemu-guest-agent
+{% if upload_cicustom_runcmd is defined and upload_cicustom_runcmd != '' %}
+runcmd:
+{% for cmd in upload_cicustom_runcmd | from_json %}
+  - {{ cmd }}
+{% endfor %}
+{% endif %}

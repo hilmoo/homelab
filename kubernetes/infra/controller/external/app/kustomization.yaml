@@ -1,0 +1,51 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+  - extsecret.yaml
+  - app-storage.yaml
+
+nameSuffix: -ext
+
+patches:
+  - patch: |-
+      apiVersion: apps/v1
+      kind: StatefulSet
+      metadata:
+        name: caddy
+      spec:
+        serviceName: caddy-ext
+        template:
+          spec:
+            nodeSelector:
+              type: agent-b
+            tolerations:
+              - key: "manual"
+                operator: "Equal"
+                value: "true"
+                effect: "NoSchedule"
+            volumes:
+              - name: caddyfile
+                secret:
+                  secretName: caddy-secrets-ext
+            containers:
+              - name: caddy
+                image: ghcr.io/hilmoo/containers/my-caddy:v0.0.3
+
+        volumeClaimTemplates:
+          - metadata:
+              name: caddyconfig
+            spec:
+              storageClassName: manual-caddy-config-ext
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 1Gi
+          - metadata:
+              name: caddydata
+            spec:
+              storageClassName: manual-caddy-data-ext
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 1Gi

@@ -1,0 +1,11 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  commit:*:
+    vars:
+      MESSAGE: "{{index .MATCH 0}}"
+    cmds:
+      - git commit -m "{{.MESSAGE}}"
+      - git push origin main

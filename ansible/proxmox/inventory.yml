@@ -1,0 +1,12 @@
+all:
+  children:
+    local:
+      hosts:
+        localhost:
+          ansible_connection: local
+
+    proxmox:
+      hosts:
+        server-pve:
+          ansible_host: "server-pve"
+          ansible_user: "root"

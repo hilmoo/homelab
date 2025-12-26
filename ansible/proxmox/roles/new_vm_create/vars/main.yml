@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MIT
+---
+new_vm_create_bws_access_token: "{{ lookup('env', 'BWS_ACCESS_TOKEN') }}"
+
+new_vm_create_proxmox_node: "{{ lookup('env', 'PROXMOX_CREATE_PROXMOX_NODE') }}"
+new_vm_create_proxmox_api_host: "{{ lookup('env', 'PROXMOX_CREATE_PROXMOX_API_HOST') }}"
+new_vm_create_proxmox_api_token_id: "{{ lookup('env', 'PROXMOX_API_TOKEN_ID') }}"
+new_vm_create_proxmox_api_token_secret: "{{ lookup('env', 'PROXMOX_API_TOKEN_SECRET') }}"
+new_vm_create_proxmox_api_user: "{{ lookup('env', 'PROXMOX_API_TOKEN_USER') }}"
+
+new_vm_create_base_vmid: "{{ lookup('env', 'PROXMOX_BASE_VMID') }}"
+new_vm_create_id: "{{ lookup('env', 'PROXMOX_CREATE_ID') }}"
+new_vm_create_name: "{{ lookup('env', 'PROXMOX_CREATE_NAME') | default('vm-' ~ lookup('env', 'PROXMOX_CREATE_ID'), true) }}"
+
+new_vm_create_net0: "{{ lookup('env', 'PROXMOX_CREATE_NET0', default='vmbr0') }}"
+
+new_vm_create_cores: "{{ lookup('env', 'PROXMOX_CREATE_CORES', default='1') }}"
+new_vm_create_memory: "{{ lookup('env', 'PROXMOX_CREATE_MEMORY', default='2048') }}"
+
+new_vm_create_ciuser: "{{ lookup('env', 'PROXMOX_CREATE_CIUSER') }}"
+new_vm_create_cipassword: "{{ lookup('env', 'PROXMOX_CREATE_CIPASSWORD') }}"
+
+new_vm_create_start: "{{ lookup('env', 'PROXMOX_CREATE_START', default='true') }}"

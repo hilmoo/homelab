@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &app dns
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      serviceAccountName: "tailscale-dns"
+      nodeSelector:
+        type: controller
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: coredns-config
+
+      containers:
+        - name: coredns-dns
+          image: coredns/coredns:1.13.2
+          env:
+            - name: HOME_IP
+              valueFrom:
+                secretKeyRef:
+                  name: dns-secret
+                  key: HOME_IP
+          args:
+            - "-conf"
+            - "/etc/coredns/Corefile"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/coredns
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+        - name: ts-sidecar
+          image: "ghcr.io/tailscale/tailscale:v1.92.4"
+          env:
+            - name: TS_KUBE_SECRET
+              value: "tailscale-state"
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_DEBUG_FIREWALL_MODE
+              value: auto
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: dns-secret
+                  key: TS_AUTHKEY
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          securityContext:
+            privileged: true
+
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi

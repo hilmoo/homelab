@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: &app gatus
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+
+spec:
+  serviceName: *app
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: agent-b
+
+      tolerations:
+        - key: "manual"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
+
+      containers:
+        - name: gatus
+          image: ghcr.io/twin/gatus:v5.33.1
+
+          volumeMounts:
+            - mountPath: /data
+              name: gatus-data
+            - mountPath: /config
+              name: gatus-secrets
+              readOnly: true
+
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+      volumes:
+        - name: gatus-secrets
+          secret:
+            secretName: gatus-secrets
+
+  volumeClaimTemplates:
+    - metadata:
+        name: gatus-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "manual-gatus-data"
+        resources:
+          requests:
+            storage: 5Gi

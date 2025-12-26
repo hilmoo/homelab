@@ -1,0 +1,12 @@
+---
+creation_rules:
+  - encrypted_regex: "^(data|stringData)$"
+    path_regex: '(^|.*[./])secret\.yaml$'
+    key_groups:
+      - age:
+          - age13mcapauq0dmyg09uz5wxtmtxzueyygrvpk0tqqfvpqft0ey5j5vshccmym
+  - path_regex: infra/secret/store/.*\.yaml$
+    encrypted_regex: "^(organizationID|projectID)$"
+    key_groups:
+      - age:
+          - age13mcapauq0dmyg09uz5wxtmtxzueyygrvpk0tqqfvpqft0ey5j5vshccmym

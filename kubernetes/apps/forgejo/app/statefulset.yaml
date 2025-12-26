@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: &app forgejo
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  serviceName: *app
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: agent-a
+
+      initContainers:
+        - name: test-pg
+          image: ghcr.io/hilmoo/containers/wait-for-pg:latest
+          env:
+            - name: PGHOST
+              value: "postgres-forgejo"
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-secrets
+                  key: DB_USER
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-secrets
+                  key: DB_NAME
+
+      containers:
+        - name: forgejo
+          image: codeberg.org/forgejo/forgejo:13.0.3
+          env:
+            - name: FORGEJO__database__DB_TYPE
+              value: "postgres"
+            - name: FORGEJO__database__HOST
+              value: "postgres-forgejo:5432"
+            - name: FORGEJO__database__NAME
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-secrets
+                  key: DB_NAME
+            - name: FORGEJO__database__USER
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-secrets
+                  key: DB_USER
+            - name: FORGEJO__database__PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: forgejo-secrets
+                  key: DB_PASSWORD
+            - name: USER_UID
+              value: "1000"
+            - name: USER_GID
+              value: "1000"
+
+          volumeMounts:
+            - name: forgejo-data
+              mountPath: /data
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+  volumeClaimTemplates:
+    - metadata:
+        name: forgejo-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: manual-forgejo
+        resources:
+          requests:
+            storage: 10Gi

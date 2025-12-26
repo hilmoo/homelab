@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &app cloudflared
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+
+spec:
+  serviceName: *app
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: controller
+
+      containers:
+        - name: cloudflared
+          image: cloudflare/cloudflared:2025.11.1
+          args:
+            - tunnel
+            - --no-autoupdate
+            - run
+            - --token
+            - $(TUNNEL_TOKEN)
+          env:
+            - name: TUNNEL_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cloudflared-token
+                  key: TUNNEL_TOKEN
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"

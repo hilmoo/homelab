@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vaultwarden
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: vaultwarden-from-caddy-ext
+  namespace: &app vaultwarden
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: caddy-ext
+      ports:
+        - port: 80
+          protocol: TCP
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: intra-namespace-vaultwarden
+  namespace: &app vaultwarden
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: *app

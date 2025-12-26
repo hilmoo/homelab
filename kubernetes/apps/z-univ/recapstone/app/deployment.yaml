@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &app recapstone
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+
+spec:
+  serviceName: *app
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: agent-a
+
+      containers:
+        - name: recapstone
+          image: ghcr.io/paw-paw-duarr/recapstone:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: recapstone-secrets
+
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi

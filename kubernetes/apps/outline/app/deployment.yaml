@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &app outline
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: agent-a
+
+      initContainers:
+        - name: test-pg
+          image: ghcr.io/hilmoo/containers/wait-for-pg:latest
+          env:
+            - name: PGHOST
+              value: "postgres-outline"
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: outline-secrets
+                  key: DB_USER
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: outline-secrets
+                  key: DB_NAME
+
+      containers:
+        - name: outline
+          image: outlinewiki/outline:1.1.0
+          ports:
+            - containerPort: 3000
+              name: web
+
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: FORCE_HTTPS
+              value: "false"
+            - name: ENABLE_UPDATES
+              value: "false"
+            - name: PORT
+              value: "3000"
+            - name: PGSSLMODE
+              value: disable
+            - name: REDIS_URL
+              value: redis://redis-outline:6379
+            - name: FILE_STORAGE
+              value: s3
+            - name: AWS_REGION
+              value: us-east-1
+            - name: FILE_STORAGE_UPLOAD_MAX_SIZE
+              value: "262144000" # 250MB
+            - name: FILE_STORAGE_IMPORT_MAX_SIZE
+              value: "104857600" # 100MB
+          envFrom:
+            - secretRef:
+                name: outline-secrets
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1000Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi

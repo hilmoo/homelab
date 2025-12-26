@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &app dozzle
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      serviceAccountName: pod-viewer
+      nodeSelector:
+        type: controller
+
+      containers:
+        - name: *app
+          image: amir20/dozzle:v8.14.12
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DOZZLE_MODE
+              value: k8s
+            - name: DOZZLE_NO_ANALYTICS
+              value: "true"
+
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi

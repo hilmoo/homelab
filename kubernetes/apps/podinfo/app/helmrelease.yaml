@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: podinfo
+spec:
+  interval: 1h
+
+  chart:
+    spec:
+      chart: podinfo
+      version: 6.9.4
+      interval: 2h
+      sourceRef:
+        kind: HelmRepository
+        name: podinfo
+
+  values:
+    nodeSelector:
+      type: agent-a
+
+    ui:
+      message: "Hello from my Home Cluster!!!"
+
+    logs:
+      general:
+        level: DEBUG
+      access:
+        enabled: true

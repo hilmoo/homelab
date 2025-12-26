@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: &app keycloak
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: http
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-discovery
+  namespace: keycloak
+  labels:
+    app: keycloak
+spec:
+  selector:
+    app: keycloak
+  clusterIP: None
+  type: ClusterIP

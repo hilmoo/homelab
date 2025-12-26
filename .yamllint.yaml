@@ -1,0 +1,20 @@
+---
+yaml-files:
+  - "*.yaml"
+extends: default
+rules:
+  line-length: disable
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  indentation:
+    indent-sequences: true
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  document-start: disable
+  truthy: disable
+
+ignore: |
+  .github/
+  kubernetes/clusters/home/flux-system

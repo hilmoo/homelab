@@ -1,0 +1,40 @@
+---
+- name: Install dependencies
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Install python dependencies
+      ansible.builtin.pip:
+        requirements: "{{ playbook_dir }}/requirements.txt"
+  tags:
+    - install
+
+- name: Upload cloud-init configuration
+  hosts: server-pve
+  become: false
+  roles:
+    - upload_cicustom
+  tags:
+    - create
+
+- name: Create new VM
+  hosts: localhost
+  connection: local
+  become: false
+  roles:
+    - new_vm_create
+  tags:
+    - create
+
+- name: Remove cloud-init configuration
+  hosts: server-pve
+  become: false
+  tasks:
+    - name: Remove cloud-init configuration file
+      ansible.builtin.file:
+        path: /var/lib/vz/snippets/cloud-init.yml
+        state: absent
+  tags:
+    - create

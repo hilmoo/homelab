@@ -1,0 +1,57 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["schedule:daily", ":dependencyDashboard"],
+  "timezone": "Asia/Jakarta",
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 5,
+  "ignorePaths": ["ansible/**"],
+  "kubernetes": {
+    "managerFilePatterns": ["kubernetes/**"]
+  },
+  "flux": {
+    "managerFilePatterns": ["kubernetes/**"]
+  },
+  "packageRules": [
+    {
+      "description": "Docker Compose: Group by parent folder (e.g., Docker: minecraft)",
+      "matchPaths": ["docker/**"],
+      "groupName": "Docker: {{ lookup (split packageFileDir '/') 1 }}",
+      "commitMessagePrefix": "feat(docker):",
+      "commitMessageTopic": "{{ lookup (split packageFileDir '/') 1 }}",
+      "commitMessageExtra": "({{#each upgrades}}{{depName}} to {{newVersion}}{{#unless @last}}, {{/unless}}{{/each}})"
+    },
+    {
+      "description": "Group k8s apps by folder, clean titles",
+      "matchPaths": ["kubernetes/apps/**"],
+      "groupName": "{{ lookup (split packageFileDir '/') 2 }}",
+      "commitMessagePrefix": "feat(k8s-app):",
+      "commitMessageTopic": "{{ lookup (split packageFileDir '/') 2 }}",
+      "commitMessageExtra": "({{#each upgrades}}{{depName}} to {{newVersion}}{{#unless @last}}, {{/unless}}{{/each}})"
+    },
+    {
+      "matchPaths": ["kubernetes/infra/**", "!kubernetes/infra/controller/**"],
+      "groupName": "{{ lookup (split packageFileDir '/') 2 }}",
+      "commitMessagePrefix": "feat(k8s-infra):",
+      "commitMessageTopic": "{{ lookup (split packageFileDir '/') 2 }}",
+      "commitMessageExtra": "({{#each upgrades}}{{depName}} to {{newVersion}}{{#unless @last}}, {{/unless}}{{/each}})"
+    },
+    {
+      "matchPaths": ["kubernetes/infra/controller/**"],
+      "groupName": "{{ lookup (split packageFileDir '/') 3 }}",
+      "commitMessagePrefix": "feat(k8s-controller):",
+      "commitMessageTopic": "{{ lookup (split packageFileDir '/') 3 }}",
+      "commitMessageExtra": "({{#each upgrades}}{{depName}} to {{newVersion}}{{#unless @last}}, {{/unless}}{{/each}})"
+    },
+    {
+      "matchPaths": ["kubernetes/clusters/**"],
+      "groupName": "{{ lookup (split packageFileDir '/') 2 }}",
+      "commitMessagePrefix": "feat(k8s-cluster):",
+      "commitMessageTopic": "{{ lookup (split packageFileDir '/') 2 }}"
+    },
+    {
+      "matchPackageNames": ["postgres", "redis"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ]
+}

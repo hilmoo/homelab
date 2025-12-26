@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: &app adguard
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      serviceAccountName: "tailscale-adguard"
+      nodeSelector:
+        type: controller
+
+      containers:
+        - name: adguard-dns
+          image: adguard/adguardhome:v0.107.71
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/adguardhome/work
+            - name: work-volume
+              mountPath: /opt/adguardhome/conf
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+        - name: ts-sidecar
+          image: "ghcr.io/tailscale/tailscale:v1.92.4"
+          env:
+            - name: TS_KUBE_SECRET
+              value: "tailscale-state"
+            - name: TS_USERSPACE
+              value: "false"
+            - name: TS_DEBUG_FIREWALL_MODE
+              value: auto
+            - name: TS_AUTHKEY
+              valueFrom:
+                secretKeyRef:
+                  name: adguard-secrets
+                  key: TS_AUTHKEY
+                  optional: true
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+          securityContext:
+            privileged: true
+
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+  volumeClaimTemplates:
+    - metadata:
+        name: config-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: manual-adguard-conf
+        resources:
+          requests:
+            storage: 1Gi
+    - metadata:
+        name: work-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: manual-adguard-work
+        resources:
+          requests:
+            storage: 1Gi

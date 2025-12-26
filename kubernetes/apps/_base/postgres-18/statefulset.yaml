@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    app.kubernetes.io/name: postgres
+    app.kubernetes.io/instance: postgres
+    app.kubernetes.io/version: "18"
+
+spec:
+  serviceName: postgres
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres
+      app.kubernetes.io/instance: postgres
+      app.kubernetes.io/version: "18"
+
+  template:
+    metadata:
+      name: postgres
+      labels:
+        app.kubernetes.io/name: postgres
+        app.kubernetes.io/instance: postgres
+        app.kubernetes.io/version: "18"
+
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:18.1
+
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: DB_PASSWORD
+
+          volumeMounts:
+            - name: database
+              mountPath: /var/lib/postgresql/18/docker
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 2Gi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+  volumeClaimTemplates:
+    - metadata:
+        name: database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "manual-postgres"
+        resources:
+          requests:
+            storage: 10Gi
+        selector:
+          matchLabels:
+            type: local

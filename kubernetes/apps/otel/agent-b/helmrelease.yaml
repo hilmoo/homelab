@@ -1,0 +1,155 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: otel-agent-b
+  namespace: otel
+spec:
+  interval: 1h
+
+  chart:
+    spec:
+      chart: opentelemetry-collector
+      version: 0.142.1
+      interval: 2h
+      sourceRef:
+        kind: HelmRepository
+        name: otel
+
+  values:
+    mode: deployment
+    nodeSelector:
+      type: agent-b
+
+    tolerations:
+      - key: "manual"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+
+    image:
+      repository: otel/opentelemetry-collector-contrib
+      tag: "0.142.0"
+
+    extraEnvsFrom:
+      - secretRef:
+          name: otel-secrets
+
+    clusterRole:
+      create: true
+      rules:
+        - apiGroups: [""]
+          resources: ["pods", "namespaces", "nodes"]
+          verbs: ["get", "watch", "list"]
+
+    extraVolumes:
+      - name: varlogpods
+        hostPath:
+          path: /var/log/pods
+      - name: geoip-db
+        hostPath:
+          path: /opt/geoip
+
+    extraVolumeMounts:
+      - name: varlogpods
+        mountPath: /var/log/pods
+        readOnly: true
+      - name: geoip-db
+        mountPath: /opt/geoip
+
+    initContainers:
+      - name: download-geoip-db
+        image: ghcr.io/hilmoo/containers/auto-download-mmdb:latest
+        volumeMounts:
+          - name: geoip-db
+            mountPath: /var/geoip
+
+    config:
+      receivers:
+        filelog/caddy_ext:
+          include:
+            - /var/log/pods/caddy-ext_caddy-ext*/*/*.log
+          exclude: []
+          start_at: end
+          include_file_path: true
+          operators:
+            - type: regex_parser
+              id: extract_metadata_from_path
+              regex: "^/var/log/pods/(?P<namespace>[^/]+)_(?P<pod_name>[^/]+)_(?P<uid>[^/]+)/(?P<container_name>[^/]+)/.*$"
+              parse_from: attributes["log.file.path"]
+            - type: container
+            - type: json_parser
+              if: 'body matches "^{.*}$"'
+              parse_from: body
+
+      processors:
+        k8sattributes:
+          auth_type: "serviceAccount"
+          passthrough: false
+          extract:
+            metadata:
+              - k8s.pod.name
+              - k8s.pod.uid
+              - k8s.deployment.name
+              - k8s.namespace.name
+              - k8s.node.name
+              - k8s.container.name
+
+        transform/extract_ip:
+          log_statements:
+            - context: log
+              statements:
+                - set(attributes["client_ip"], attributes["request"]["client_ip"]) where attributes["client_ip"] == nil
+
+        resource/set_caddy-ext_service_name:
+          attributes:
+            - key: service.name
+              value: caddy-ext
+              action: upsert
+
+        geoip:
+          context: record
+          attributes:
+            - client_ip
+          providers:
+            maxmind:
+              database_path: /opt/geoip/GeoLite2-City.mmdb
+
+        batch:
+          send_batch_size: 1024
+          timeout: 1s
+
+      exporters:
+        debug:
+          verbosity: detailed
+
+        otlphttp/grafana_cloud:
+          endpoint: https://otlp-gateway-prod-ap-southeast-2.grafana.net/otlp
+          auth:
+            authenticator: basicauth/grafana_cloud
+
+      extensions:
+        basicauth/grafana_cloud:
+          client_auth:
+            username: ${GRAFANA_USERNAME}
+            password: ${GRAFANA_PASSWORD}
+
+      connectors:
+        grafanacloud:
+          host_identifiers: ["host.name"]
+
+      service:
+        extensions: [basicauth/grafana_cloud, health_check]
+        pipelines:
+          logs:
+            receivers: [filelog/caddy_ext]
+            processors:
+              [
+                k8sattributes,
+                transform/extract_ip,
+                geoip,
+                resource/set_caddy-ext_service_name,
+                batch,
+              ]
+            exporters: [debug, otlphttp/grafana_cloud]

@@ -1,0 +1,4 @@
+kubeconfig
+gatus.config.yaml
+Caddyfile
+*.agekey

@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT
+---
+upload_cicustom_create_name: "{{ lookup('env', 'PROXMOX_CREATE_NAME') | default('vm-' ~ lookup('env', 'PROXMOX_CREATE_ID'), true) }}"
+
+upload_cicustom_create_ciuser: "{{ lookup('env', 'PROXMOX_CREATE_CIUSER') }}"
+upload_cicustom_create_cipassword: "{{ lookup('env', 'PROXMOX_CREATE_CIPASSWORD') }}"
+upload_cicustom_runcmd: "{{ lookup('env', 'PROXMOX_CREATE_CICUSTOM_RUNCMD') | default('', true) }}"

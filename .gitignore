@@ -1,0 +1,6 @@
+.ansible
+.env
+.vscode
+.venv
+.direnv
+*.crt

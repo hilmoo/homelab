@@ -147,7 +147,7 @@ I decided not to self-host all my infra because some of the services need near-p
         <img alt="2025 Tech Stack" src="./assets/2025/tech-stack.png">
       </td>
       <td align="center" valign="top">
-        <a href="https://2025-homelab.hilmo.dev/">https://2025-homelab.hilmo.dev/</a>
+        <a href="https://www.linkedin.com/posts/hilmi05_this-past-year-marked-the-start-of-my-homelab-activity-7410620559367155712-NXLn">Linkedin</a>
         <br><br>
         <img alt="2025 Wrap" src="./assets/2025/wrap.png">
       </td>

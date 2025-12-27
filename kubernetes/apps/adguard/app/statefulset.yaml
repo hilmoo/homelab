@@ -21,7 +21,13 @@ spec:
     spec:
       serviceAccountName: "tailscale-adguard"
       nodeSelector:
-        type: controller
+        type: agent-b
+
+      tolerations:
+        - key: "manual"
+          operator: "Equal"
+          value: "true"
+          effect: "NoSchedule"
 
       containers:
         - name: adguard-dns

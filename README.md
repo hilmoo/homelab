@@ -211,7 +211,7 @@ I decided not to self-host all my infra because some of the services need near-p
 ## **Getting Started**
 To build a similar homelab, I highly recommend starting with the official documentation for each component in the stack. Use my infra as reference only.
 
-### **Caveats**
+### **Design Decisions**
 The infrastructure I used, especially the configuration inside the [kubernetes folder](./kubernetes/), is highly tuned for my low-resource environment. My Kubernetes cluster is also not HA (High Availability), it contains only a single Control Plane and two Agents.
 
 1. Disabled Services: I disable several embedded K3s services to save resources. Check the list [here](./kubernetes/Taskfile.yml).

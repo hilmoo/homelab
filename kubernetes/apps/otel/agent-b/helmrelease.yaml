@@ -121,9 +121,6 @@ spec:
           timeout: 1s
 
       exporters:
-        debug:
-          verbosity: detailed
-
         otlphttp/grafana_cloud:
           endpoint: https://otlp-gateway-prod-ap-southeast-2.grafana.net/otlp
           auth:
@@ -152,4 +149,4 @@ spec:
                 resource/set_caddy-ext_service_name,
                 batch,
               ]
-            exporters: [debug, otlphttp/grafana_cloud]
+            exporters: [otlphttp/grafana_cloud]

@@ -7,7 +7,7 @@ tasks:
     vars:
       IP: "{{index .MATCH 0}}"
       USER: "{{index .MATCH 1}}"
-      IFACE: "{{index .MATCH 2}}"
+      VPN_AUTH: "{{index .MATCH 2}}"
     cmd: nix develop .#init --command k3sup install --ip '{{.IP}}' --user '{{.USER}}' --ssh-key $HOME/.ssh/dummy --no-extras --k3s-extra-args "--node-external-ip '{{.IP}}' --vpn-auth 'name=tailscale,joinKey={{.VPN_AUTH}}'"
 
   k3sup-agent:*:*:*:*:

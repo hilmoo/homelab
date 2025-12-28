@@ -10,6 +10,9 @@
   "ignorePaths": [
     "ansible/**"
   ],
+  "nix": {
+    "enabled": true
+  },
   "kubernetes": {
     "managerFilePatterns": [
       "kubernetes/**"

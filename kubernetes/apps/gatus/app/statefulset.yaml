@@ -50,6 +50,11 @@ spec:
               cpu: 50m
               memory: 64Mi
 
+          securityContext:
+            runAsUser: 2025
+            runAsGroup: 2025
+            runAsNonRoot: true
+
       volumes:
         - name: gatus-secrets
           secret:

@@ -48,6 +48,10 @@ spec:
               mountPath: /config
             - name: caddydata
               mountPath: /data
+          securityContext:
+            runAsUser: 2025
+            runAsGroup: 2025
+            runAsNonRoot: true
 
   volumeClaimTemplates:
     - metadata:

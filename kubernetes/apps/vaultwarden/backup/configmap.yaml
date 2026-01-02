@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rrrestic-config
+data:
+  rrrestic.toml: |
+    [[backup]]
+    name = "backup-vaultwarden"
+    repository = "${RESTIC_REPOSITORY}"
+    source = "backup/"
+
+    env.RESTIC_PASSWORD = "${RESTIC_PASSWORD}"
+    env.AWS_ACCESS_KEY_ID = "${AWS_ACCESS_KEY_ID}"
+    env.AWS_SECRET_ACCESS_KEY = "${AWS_SECRET_ACCESS_KEY}"
+
+    before = ["/usr/local/bin/backup.sh"]

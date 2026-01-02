@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vaultwarden-backup
+spec:
+  schedule: "0 0 * * *" # Runs daily at midnight
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            type: agent-b
+          tolerations:
+            - key: "manual"
+              operator: "Equal"
+              value: "true"
+              effect: "NoSchedule"
+
+          containers:
+            - name: backup-vaultwarden
+              image: ghcr.io/hilmoo/containers/rrrestic-vaultwarden:v0.1.2
+              volumeMounts:
+                - mountPath: /target
+                  name: vaultwarden-data
+                - mountPath: /rrrestic.toml
+                  subPath: rrrestic.toml
+                  name: rrrestic-config
+
+              env:
+                - name: RRRESTIC_CONFIG
+                  value: /rrrestic.toml
+                - name: OTEL_SERVICE_NAME
+                  value: vaultwarden-backup
+                - name: OTEL_EXPORTER_OTLP_ENDPOINT
+                  value: "http://otel-agent-b-opentelemetry-collector.otel.svc.cluster.local:4318"
+              envFrom:
+                - secretRef:
+                    name: vaultwarden-backup-secrets
+          volumes:
+            - name: vaultwarden-data
+              hostPath:
+                path: /opt/data/vaultwarden
+                type: Directory
+            - name: rrrestic-config
+              configMap:
+                name: rrrestic-config
+          restartPolicy: Never

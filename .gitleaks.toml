@@ -5,7 +5,7 @@ useDefault = true
 
 [[allowlists]]
 description = "False positive"
-regexTarget = "match"
+regexTarget = "line"
 regexes = [
     '''(?im)^\s*key:\s*"[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"\s*$''',
 ]

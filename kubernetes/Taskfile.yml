@@ -66,3 +66,12 @@ tasks:
 
   apps-kustomize:
     cmd: ./scripts/apps-to-kustomization.sh
+
+  commit:*:*:*:
+    vars:
+      PREFIX: "{{index .MATCH 0}}"
+      SERVICE: "{{index .MATCH 1}}"
+      MESSAGE: "{{index .MATCH 2}}"
+    cmds:
+      - 'git commit -m "{{.PREFIX}}(k8s/{{.SERVICE}}): {{.MESSAGE}}"'
+      - git push origin main

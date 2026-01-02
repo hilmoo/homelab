@@ -20,6 +20,9 @@
             pkgs.sops
             pkgs.caddy
             pkgs.bws
+
+            pkgs.yamllint
+            pkgs.gitleaks
           ];
         };
 

@@ -67,6 +67,11 @@ spec:
 
     config:
       receivers:
+        otlp:
+          protocols:
+            http:
+              endpoint: "0.0.0.0:4318"
+
         filelog/caddy_ext:
           include:
             - /var/log/pods/caddy-ext_caddy-ext*/*/*.log
@@ -139,7 +144,7 @@ spec:
       service:
         extensions: [basicauth/grafana_cloud, health_check]
         pipelines:
-          logs:
+          logs/caddy_ext:
             receivers: [filelog/caddy_ext]
             processors:
               [
@@ -149,4 +154,8 @@ spec:
                 resource/set_caddy-ext_service_name,
                 batch,
               ]
+            exporters: [otlphttp/grafana_cloud]
+          logs/otlp:
+            receivers: [otlp]
+            processors: [batch]
             exporters: [otlphttp/grafana_cloud]

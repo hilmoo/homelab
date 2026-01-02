@@ -19,7 +19,7 @@ spec:
 
           containers:
             - name: backup-vaultwarden
-              image: ghcr.io/hilmoo/containers/rrrestic-vaultwarden:v0.1.2
+              image: ghcr.io/hilmoo/containers/my-rrrestic:v0.0.1
               volumeMounts:
                 - mountPath: /target
                   name: vaultwarden-data

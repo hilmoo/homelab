@@ -46,7 +46,7 @@ spec:
 
       containers:
         - name: forgejo
-          image: codeberg.org/forgejo/forgejo:13.0.4
+          image: codeberg.org/forgejo/forgejo:14.0.1
           env:
             - name: FORGEJO__database__DB_TYPE
               value: "postgres"

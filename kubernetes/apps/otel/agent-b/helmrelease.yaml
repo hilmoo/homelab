@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: opentelemetry-collector
-      version: 0.143.1
+      version: 0.144.0
       interval: 2h
       sourceRef:
         kind: HelmRepository

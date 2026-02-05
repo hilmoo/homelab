@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: podinfo
-      version: 6.10.0
+      version: 6.10.1
       interval: 2h
       sourceRef:
         kind: HelmRepository

@@ -31,7 +31,7 @@ spec:
 
       containers:
         - name: adguard-dns
-          image: adguard/adguardhome:v0.107.71
+          image: adguard/adguardhome:v0.107.72
           volumeMounts:
             - name: config-volume
               mountPath: /opt/adguardhome/work

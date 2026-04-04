@@ -63,7 +63,11 @@ spec:
                 secretKeyRef:
                   name: adguard-secrets
                   key: TS_AUTHKEY
-                  optional: true
+            - name: TS_EXTRA_ARGS
+              valueFrom:
+                secretKeyRef:
+                  name: adguard-secrets
+                  key: TS_EXTRA_ARGS
             - name: POD_NAME
               valueFrom:
                 fieldRef:

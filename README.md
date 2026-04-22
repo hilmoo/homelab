@@ -60,7 +60,7 @@ Some highlighted components of the stack:
 
 ### **IoT**
 
-_Soon_
+[hilmoo/homelab-iot](https://github.com/hilmoo/homelab-iot)
 
 ### **External Services**
 

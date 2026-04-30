@@ -26,7 +26,7 @@ spec:
 
       containers:
         - name: *app
-          image: amir20/dozzle:v10.5.0
+          image: amir20/dozzle:v10.5.1
           ports:
             - containerPort: 8080
           env:

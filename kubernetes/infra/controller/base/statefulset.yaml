@@ -25,7 +25,7 @@ spec:
 
       containers:
         - name: caddy
-          image: caddy:2.11.2-alpine
+          image: caddy:2.11.3-alpine
           resources:
             requests:
               memory: "64Mi"

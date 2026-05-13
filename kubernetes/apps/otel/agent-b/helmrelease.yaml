@@ -30,7 +30,7 @@ spec:
 
     image:
       repository: otel/opentelemetry-collector-contrib
-      tag: "0.151.0"
+      tag: "0.152.0"
 
     extraEnvsFrom:
       - secretRef:

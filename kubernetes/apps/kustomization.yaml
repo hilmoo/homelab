@@ -11,4 +11,4 @@ resources:
   - podinfo
   - rook-ceph
   - vaultwarden
-  # - z-univ
+  - z-univ

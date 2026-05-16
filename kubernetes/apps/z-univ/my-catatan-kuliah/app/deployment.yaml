@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: &app my-catatan-kuliah
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+
+spec:
+  serviceName: *app
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: agent-a
+
+      containers:
+        - name: app
+          image: ghcr.io/hilmoo/my-catatan-kuliah-apps:0.1.0
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: my-catatan-kuliah-secrets
+
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+        - name: ai
+          image: ghcr.io/hilmoo/my-catatan-kuliah-ai:0.1.0
+          envFrom:
+            - secretRef:
+                name: my-catatan-kuliah-secrets
+
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+        - name: embedder
+          image: ghcr.io/hilmoo/my-catatan-kuliah-embedder:0.1.0
+          envFrom:
+            - secretRef:
+                name: my-catatan-kuliah-secrets
+
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+
+        - name: hocuspocus
+          image: ghcr.io/hilmoo/my-catatan-kuliah-hocuspocus:0.1.0
+          envFrom:
+            - secretRef:
+                name: my-catatan-kuliah-secrets
+
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi

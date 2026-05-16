@@ -55,7 +55,7 @@ spec:
         name: nats-data
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: "manual-nats"
+        storageClassName: "manual-my-catatan-kuliah-nats"
         resources:
           requests:
             storage: 5Gi

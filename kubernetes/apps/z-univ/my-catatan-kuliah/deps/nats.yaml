@@ -1,0 +1,30 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: manual-my-catatan-kuliah-nats
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-catatan-kuliah-nats-pv-manual
+  labels:
+    type: local
+    app.kubernetes.io/name: my-catatan-kuliah-nats
+spec:
+  storageClassName: manual-my-catatan-kuliah-nats
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/my-catatan-kuliah/nats
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: type
+              operator: In
+              values:
+                - agent-a

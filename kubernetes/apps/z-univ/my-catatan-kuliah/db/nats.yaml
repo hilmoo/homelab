@@ -19,17 +19,27 @@ metadata:
   name: nats
   labels:
     app.kubernetes.io/name: nats
+    app.kubernetes.io/instance: nats
 spec:
   serviceName: nats
   replicas: 1
+
   selector:
     matchLabels:
       app.kubernetes.io/name: nats
+      app.kubernetes.io/instance: nats
+
   template:
     metadata:
+      name: nats
       labels:
         app.kubernetes.io/name: nats
+        app.kubernetes.io/instance: nats
+
     spec:
+      nodeSelector:
+        type: agent-a
+
       containers:
         - name: nats
           image: nats:2.12-alpine
@@ -50,6 +60,7 @@ spec:
             requests:
               cpu: 50m
               memory: 64Mi
+
   volumeClaimTemplates:
     - metadata:
         name: nats-data

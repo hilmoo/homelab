@@ -27,7 +27,7 @@ spec:
 
       containers:
         - name: app
-          image: ghcr.io/hilmoo/my-catatan-kuliah-apps:0.1.0
+          image: ghcr.io/hilmoo/my-catatan-kuliah-apps:0.1.1
           ports:
             - containerPort: 8080
           envFrom:
@@ -43,7 +43,7 @@ spec:
               memory: 64Mi
 
         - name: ai
-          image: ghcr.io/hilmoo/my-catatan-kuliah-ai:0.1.0
+          image: ghcr.io/hilmoo/my-catatan-kuliah-ai:0.1.1
           envFrom:
             - secretRef:
                 name: my-catatan-kuliah-secrets
@@ -57,7 +57,7 @@ spec:
               memory: 64Mi
 
         - name: embedder
-          image: ghcr.io/hilmoo/my-catatan-kuliah-embedder:0.1.0
+          image: ghcr.io/hilmoo/my-catatan-kuliah-embedder:0.1.1
           envFrom:
             - secretRef:
                 name: my-catatan-kuliah-secrets
@@ -71,7 +71,7 @@ spec:
               memory: 64Mi
 
         - name: hocuspocus
-          image: ghcr.io/hilmoo/my-catatan-kuliah-hocuspocus:0.1.0
+          image: ghcr.io/hilmoo/my-catatan-kuliah-hocuspocus:0.1.1
           envFrom:
             - secretRef:
                 name: my-catatan-kuliah-secrets

@@ -19,7 +19,8 @@ spec:
         app.kubernetes.io/instance: *app
 
     spec:
-      serviceAccountName: "tailscale-adguard"
+      hostNetwork: true
+      # serviceAccountName: "tailscale-adguard"
       nodeSelector:
         type: agent-b
 
@@ -49,43 +50,43 @@ spec:
             runAsGroup: 2025
             runAsNonRoot: true
 
-        - name: ts-sidecar
-          image: "ghcr.io/tailscale/tailscale:v1.96.5"
-          env:
-            - name: TS_KUBE_SECRET
-              value: "tailscale-state"
-            - name: TS_USERSPACE
-              value: "false"
-            - name: TS_DEBUG_FIREWALL_MODE
-              value: auto
-            - name: TS_AUTHKEY
-              valueFrom:
-                secretKeyRef:
-                  name: adguard-secrets
-                  key: TS_AUTHKEY
-            - name: TS_EXTRA_ARGS
-              valueFrom:
-                secretKeyRef:
-                  name: adguard-secrets
-                  key: TS_EXTRA_ARGS
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: POD_UID
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.uid
-          securityContext:
-            privileged: true
+        # - name: ts-sidecar
+        #   image: "ghcr.io/tailscale/tailscale:v1.96.5"
+        #   env:
+        #     - name: TS_KUBE_SECRET
+        #       value: "tailscale-state"
+        #     - name: TS_USERSPACE
+        #       value: "false"
+        #     - name: TS_DEBUG_FIREWALL_MODE
+        #       value: auto
+        #     - name: TS_AUTHKEY
+        #       valueFrom:
+        #         secretKeyRef:
+        #           name: adguard-secrets
+        #           key: TS_AUTHKEY
+        #     - name: TS_EXTRA_ARGS
+        #       valueFrom:
+        #         secretKeyRef:
+        #           name: adguard-secrets
+        #           key: TS_EXTRA_ARGS
+        #     - name: POD_NAME
+        #       valueFrom:
+        #         fieldRef:
+        #           fieldPath: metadata.name
+        #     - name: POD_UID
+        #       valueFrom:
+        #         fieldRef:
+        #           fieldPath: metadata.uid
+        #   securityContext:
+        #     privileged: true
 
-          resources:
-            limits:
-              cpu: 200m
-              memory: 256Mi
-            requests:
-              cpu: 50m
-              memory: 64Mi
+        #   resources:
+        #     limits:
+        #       cpu: 200m
+        #       memory: 256Mi
+        #     requests:
+        #       cpu: 50m
+        #       memory: 64Mi
 
   volumeClaimTemplates:
     - metadata:

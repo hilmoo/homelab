@@ -28,3 +28,16 @@ spec:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: *app
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: z-univ-from-caddy-int
+  namespace: z-univ
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: caddy-int

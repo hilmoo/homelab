@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - internal/home.yaml
   - external/home.yaml
-  - tunnel

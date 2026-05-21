@@ -6,6 +6,5 @@ resources:
   - ../cert/core
   - ../controller/external/core
   - ../controller/internal/core
-  - ../controller/tunnel/core
   - ../secret/core
   - ../system

@@ -44,7 +44,7 @@ spec:
 
       containers:
         - name: outline
-          image: outlinewiki/outline:1.7.1
+          image: outlinewiki/outline:1.8.1
           ports:
             - containerPort: 3000
               name: web

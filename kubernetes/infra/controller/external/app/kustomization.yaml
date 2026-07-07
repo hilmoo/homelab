@@ -30,7 +30,7 @@ patches:
                   secretName: caddy-secrets-ext
             containers:
               - name: caddy
-                image: ghcr.io/hilmoo/containers/my-caddy:v0.1.2
+                image: ghcr.io/hilmoo/containers/my-caddy:v0.1.3
 
         volumeClaimTemplates:
           - metadata:

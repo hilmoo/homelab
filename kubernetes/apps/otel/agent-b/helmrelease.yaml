@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: opentelemetry-collector
-      version: 0.165.0
+      version: 0.169.0
       interval: 2h
       sourceRef:
         kind: HelmRepository
@@ -30,7 +30,7 @@ spec:
 
     image:
       repository: otel/opentelemetry-collector-contrib
-      tag: "0.157.0"
+      tag: "0.158.0"
 
     extraEnvsFrom:
       - secretRef:

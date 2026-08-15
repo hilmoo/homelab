@@ -19,7 +19,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /opt/data/actualbudget
+    path: /mnt/data/actualbudget
   nodeAffinity:
     required:
       nodeSelectorTerms:

@@ -4,7 +4,7 @@ version: "3"
 
 tasks:
   proxmox-i:
-    cmd: ansible-playbook proxmox/main.yml -i proxmox/inventory.yml --tags install
+    cmd: uv run ansible-playbook proxmox/main.yml -i proxmox/inventory.yml --tags install
 
   proxmox-create:
-    cmd: ansible-playbook proxmox/main.yml -i proxmox/inventory.yml --tags create
+    cmd: uv run ansible-playbook proxmox/main.yml -i proxmox/inventory.yml --tags create

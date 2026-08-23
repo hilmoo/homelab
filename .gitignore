@@ -4,3 +4,5 @@
 .venv
 .direnv
 *.crt
+
+devbox.d/

@@ -26,6 +26,16 @@
   },
   "packageRules": [
     {
+      "description": "Automerge minor and patch updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
+    },
+    {
       "description": "Docker Compose: Group by parent folder (e.g., Docker: minecraft)",
       "matchFileNames": [
         "docker/**"

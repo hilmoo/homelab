@@ -65,7 +65,7 @@ spec:
   placement:
     all:
       nodeAffinity:
-        required:
+        requiredDuringSchedulingIgnoredDuringExecution:
           nodeSelectorTerms:
             - matchExpressions:
                 - key: type

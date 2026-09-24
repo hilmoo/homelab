@@ -1,0 +1,40 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  yamllint:
+    name: yamllint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install yamllint
+        run: pipx install yamllint==1.37.1
+      - name: Run yamllint
+        run: yamllint --strict -c=.yamllint.yaml .
+
+  secrets:
+    name: betterleaks
+    runs-on: ubuntu-latest
+    env:
+      BETTERLEAKS_VERSION: 1.8.1
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Install betterleaks
+        run: |
+          curl -sSfL "https://github.com/betterleaks/betterleaks/releases/download/v${BETTERLEAKS_VERSION}/betterleaks_${BETTERLEAKS_VERSION}_linux_x64.tar.gz" \
+            | tar -xz -C /usr/local/bin betterleaks
+      - name: Scan git history for secrets
+        run: betterleaks git --redact --verbose --no-banner .

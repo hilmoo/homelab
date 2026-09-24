@@ -1,0 +1,38 @@
+name: Kubernetes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - kubernetes/**
+      - .github/scripts/validate-kubernetes.sh
+      - .github/workflows/kubernetes.yaml
+  pull_request:
+    paths:
+      - kubernetes/**
+      - .github/scripts/validate-kubernetes.sh
+      - .github/workflows/kubernetes.yaml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup kustomize and kubeconform
+        uses: yokawasa/action-setup-kube-tools@v0.14.0
+        with:
+          setup-tools: |
+            kustomize
+            kubeconform
+          kustomize: 5.7.1
+          kubeconform: 0.8.0
+      - name: Build kustomizations and validate schemas
+        run: .github/scripts/validate-kubernetes.sh

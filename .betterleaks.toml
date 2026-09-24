@@ -1,0 +1,6 @@
+filter = '''
+filter.matchesAny(
+  finding["secret"],
+  [`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`]
+) && filter.containsAny(finding["line"], ["remoteRef", "secretKey"])
+'''

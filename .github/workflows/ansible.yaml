@@ -1,0 +1,36 @@
+name: Ansible
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ansible/**
+      - .github/workflows/ansible.yaml
+  pull_request:
+    paths:
+      - ansible/**
+      - .github/workflows/ansible.yaml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ansible-lint:
+    name: ansible-lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ansible
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Install Ansible collections
+        run: uv run ansible-galaxy collection install -r proxmox/requirements.yml
+      - name: Run ansible-lint
+        run: uv run ansible-lint proxmox

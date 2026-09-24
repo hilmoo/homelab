@@ -1,0 +1,8 @@
+pre-commit:
+  parallel: true
+  commands:
+    betterleaks:
+      run: betterleaks git --pre-commit --redact --staged --verbose
+    yamllint:
+      glob: "*.{yml,yaml}"
+      run: yamllint --strict -c=.yamllint.yaml {staged_files}

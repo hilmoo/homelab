@@ -1,119 +1,83 @@
 {
   "lockfile_version": "1",
   "packages": {
+    "betterleaks@1.8.1": {
+      "last_modified": "2026-08-29T00:50:12Z",
+      "resolved": "github:NixOS/nixpkgs/e8be7818e19ada32105a8af937a6a473b38167ca#betterleaks",
+      "source": "devbox-search",
+      "version": "1.8.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zxgqjpy9nliqrpy5ivqp7j3w6xrp641k-betterleaks-1.8.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zxgqjpy9nliqrpy5ivqp7j3w6xrp641k-betterleaks-1.8.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8lyzvr53zjgs17bkcxz9askhc89qjjnc-betterleaks-1.8.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8lyzvr53zjgs17bkcxz9askhc89qjjnc-betterleaks-1.8.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/jqs7d7vx99fdn5my0w4rm044gin3n7x3-betterleaks-1.8.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/jqs7d7vx99fdn5my0w4rm044gin3n7x3-betterleaks-1.8.1"
+        }
+      }
+    },
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
       "last_modified": "2026-08-22T02:12:10Z",
       "resolved": "github:NixOS/nixpkgs/a831408e6378bc02ebf8cc09b52c96ca86f6bab4?lastModified=1787364730"
     },
-    "gitleaks@8.30.1": {
-      "last_modified": "2026-08-12T11:28:58Z",
-      "resolved": "github:NixOS/nixpkgs/044bfe75bfe4c7bbe043dc17b5e42ea823b84a09#gitleaks",
+    "lefthook@2.1.10": {
+      "last_modified": "2026-08-27T07:16:00Z",
+      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#lefthook",
       "source": "devbox-search",
-      "version": "8.30.1",
+      "version": "2.1.10",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/0zilxn1s7vskm1b8jxbyic99aql7zzaq-gitleaks-8.30.1",
+              "path": "/nix/store/p9qmpwmv4r8igpgclxv9c3w37pnf4bpw-lefthook-2.1.10",
               "default": true
             }
           ],
-          "store_path": "/nix/store/0zilxn1s7vskm1b8jxbyic99aql7zzaq-gitleaks-8.30.1"
+          "store_path": "/nix/store/p9qmpwmv4r8igpgclxv9c3w37pnf4bpw-lefthook-2.1.10"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/7fbpgnngix9bnqgflzfybz2i8nrr8cmj-gitleaks-8.30.1",
+              "path": "/nix/store/hs4asvnkssmqgryq0hzg8prw2i5216ix-lefthook-2.1.10",
               "default": true
             }
           ],
-          "store_path": "/nix/store/7fbpgnngix9bnqgflzfybz2i8nrr8cmj-gitleaks-8.30.1"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/v5x4dkl13y4nxhcaq4xmrwkidy44gv9p-gitleaks-8.30.1",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/v5x4dkl13y4nxhcaq4xmrwkidy44gv9p-gitleaks-8.30.1"
+          "store_path": "/nix/store/hs4asvnkssmqgryq0hzg8prw2i5216ix-lefthook-2.1.10"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/dmi3zxbmff31nb0j6y24wi2055k7ahsw-gitleaks-8.30.1",
+              "path": "/nix/store/yvngyq9r8vj9jb0rwvx74bdqy3gc7kqy-lefthook-2.1.10",
               "default": true
             }
           ],
-          "store_path": "/nix/store/dmi3zxbmff31nb0j6y24wi2055k7ahsw-gitleaks-8.30.1"
-        }
-      }
-    },
-    "pre-commit@4.5.1": {
-      "last_modified": "2026-08-12T11:28:58Z",
-      "resolved": "github:NixOS/nixpkgs/044bfe75bfe4c7bbe043dc17b5e42ea823b84a09#pre-commit",
-      "source": "devbox-search",
-      "version": "4.5.1",
-      "systems": {
-        "aarch64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/a1wy99bf8jygrqryijl8nsnmrrlfr1xq-pre-commit-4.5.1",
-              "default": true
-            },
-            {
-              "name": "dist",
-              "path": "/nix/store/xj8kh9zv3zbb4168h1qk882mcqpqq99d-pre-commit-4.5.1-dist"
-            }
-          ],
-          "store_path": "/nix/store/a1wy99bf8jygrqryijl8nsnmrrlfr1xq-pre-commit-4.5.1"
-        },
-        "aarch64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/c3msyacjwxgw1blvcanlcw3i1xk2qqfv-pre-commit-4.5.1",
-              "default": true
-            },
-            {
-              "name": "dist",
-              "path": "/nix/store/r481022hbbb92z81152fh5a28nb0wqyy-pre-commit-4.5.1-dist"
-            }
-          ],
-          "store_path": "/nix/store/c3msyacjwxgw1blvcanlcw3i1xk2qqfv-pre-commit-4.5.1"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/51i9rjiyhdnxd96rp3cc8ykhcld7zhqq-pre-commit-4.5.1",
-              "default": true
-            },
-            {
-              "name": "dist",
-              "path": "/nix/store/hphzzlh3q6nz74px0mq2a1h7yqkyr35b-pre-commit-4.5.1-dist"
-            }
-          ],
-          "store_path": "/nix/store/51i9rjiyhdnxd96rp3cc8ykhcld7zhqq-pre-commit-4.5.1"
-        },
-        "x86_64-linux": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/5g74zf296ax76nf5r0cqwibf6ibz3fpa-pre-commit-4.5.1",
-              "default": true
-            },
-            {
-              "name": "dist",
-              "path": "/nix/store/k0d2di3g9cwr6ad02c5973rbb8lk5nbd-pre-commit-4.5.1-dist"
-            }
-          ],
-          "store_path": "/nix/store/5g74zf296ax76nf5r0cqwibf6ibz3fpa-pre-commit-4.5.1"
+          "store_path": "/nix/store/yvngyq9r8vj9jb0rwvx74bdqy3gc7kqy-lefthook-2.1.10"
         }
       }
     },

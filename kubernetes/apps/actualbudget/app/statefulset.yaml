@@ -24,7 +24,7 @@ spec:
 
       containers:
         - name: actualbudget-dns
-          image: ghcr.io/actualbudget/actual:26.9.0
+          image: ghcr.io/actualbudget/actual:26.10.0
           env:
             - name: ACTUAL_OPENID_AUTH_METHOD
               value: "oauth2"

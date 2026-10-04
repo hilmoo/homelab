@@ -7,6 +7,7 @@
 #   kubectl create -f crds.yaml -f common.yaml -f operator.yaml
 #   kubectl create -f cluster-test.yaml
 #################################################################################################################
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/ceph.rook.io/cephcluster_v1.json
 apiVersion: ceph.rook.io/v1
 kind: CephCluster
 metadata:
@@ -73,6 +74,7 @@ spec:
                   values:
                     - agent-a
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/refs/heads/main/ceph.rook.io/cephblockpool_v1.json
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:

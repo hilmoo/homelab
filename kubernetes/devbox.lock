@@ -49,52 +49,42 @@
         }
       }
     },
-    "caddy@2.11.4": {
-      "last_modified": "2026-08-27T07:16:00Z",
+    "caddy@2.11.7": {
+      "last_modified": "2026-10-08T19:21:32Z",
       "plugin_version": "0.0.4",
-      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#caddy",
+      "resolved": "github:NixOS/nixpkgs/8edc0c72e3a38faf5434e40d1f19431125fe4b30#caddy",
       "source": "devbox-search",
-      "version": "2.11.4",
+      "version": "2.11.7",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/ak27l1xxpmzcgii88p9480qmhh1hrqnm-caddy-2.11.4",
+              "path": "/nix/store/f7p2p9zhhg531xi86znyh8ql96qb7xm7-caddy-2.11.7",
               "default": true
             }
           ],
-          "store_path": "/nix/store/ak27l1xxpmzcgii88p9480qmhh1hrqnm-caddy-2.11.4"
+          "store_path": "/nix/store/f7p2p9zhhg531xi86znyh8ql96qb7xm7-caddy-2.11.7"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/r2sqdbgkfp2vmnmg4kx0vv1pi9qgbwh8-caddy-2.11.4",
+              "path": "/nix/store/qj3d2fcjjcsgvnf3l74sj6vdyzza78zq-caddy-2.11.7",
               "default": true
             }
           ],
-          "store_path": "/nix/store/r2sqdbgkfp2vmnmg4kx0vv1pi9qgbwh8-caddy-2.11.4"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/z6sf69cq0v95vm3271bw487iq2fd8rfg-caddy-2.11.4",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/z6sf69cq0v95vm3271bw487iq2fd8rfg-caddy-2.11.4"
+          "store_path": "/nix/store/qj3d2fcjjcsgvnf3l74sj6vdyzza78zq-caddy-2.11.7"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/9v0131sch36inqjr4qsl7swa9385xjmq-caddy-2.11.4",
+              "path": "/nix/store/95hr3qbmspavzzkwmbc7bf6bmlxi1ncd-caddy-2.11.7",
               "default": true
             }
           ],
-          "store_path": "/nix/store/9v0131sch36inqjr4qsl7swa9385xjmq-caddy-2.11.4"
+          "store_path": "/nix/store/95hr3qbmspavzzkwmbc7bf6bmlxi1ncd-caddy-2.11.7"
         }
       }
     },

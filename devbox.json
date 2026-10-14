@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
   "packages": [
-    "lefthook@2.1.10",
+    "lefthook@2.1.15",
     "yamllint@1.37.1",
     "betterleaks@1.8.1"
   ]

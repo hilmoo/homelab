@@ -3,6 +3,6 @@
   "packages": [
     "lefthook@2.1.15",
     "yamllint@1.37.1",
-    "betterleaks@1.8.1"
+    "betterleaks@1.9.0"
   ]
 }

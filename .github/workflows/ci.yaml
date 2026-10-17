@@ -22,7 +22,7 @@ jobs:
       docker: ${{ steps.filter.outputs.docker }}
       ansible: ${{ steps.filter.outputs.ansible }}
     steps:
-      - uses: dorny/paths-filter@v3.0.2
+      - uses: dorny/paths-filter@v3.0.4
         id: filter
         with:
           filters: |

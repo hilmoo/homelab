@@ -6,17 +6,10 @@ on:
     paths:
       - ansible/**
       - .github/workflows/ansible.yaml
-  pull_request:
-    paths:
-      - ansible/**
-      - .github/workflows/ansible.yaml
+  workflow_call:
 
 permissions:
   contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   ansible-lint:

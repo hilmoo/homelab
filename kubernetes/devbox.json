@@ -7,7 +7,8 @@
     "sops@3.13.3",
     "caddy@2.11.7",
     "bws@2.1.0",
-    "k3sup@0.13.13"
+    "k3sup@0.13.13",
+    "kubernetes-helm@4.3.1"
   ],
   "env_from": ".env"
 }

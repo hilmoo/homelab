@@ -22,6 +22,8 @@ spec:
         type: agent-a
 
       env:
+        WOODPECKER_HOST: null
+        WOODPECKER_ADMIN: null
         WOODPECKER_GITHUB: "true"
         WOODPECKER_DATABASE_DRIVER: postgres
 

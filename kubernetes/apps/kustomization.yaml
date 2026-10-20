@@ -12,4 +12,5 @@ resources:
   - podinfo
   - rook-ceph
   - vaultwarden
+  - woodpecker
   # - z-univ

@@ -1,0 +1,54 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: manual-woodpecker
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: woodpecker-pv-manual
+  labels:
+    type: local
+    app.kubernetes.io/name: woodpecker
+spec:
+  storageClassName: manual-woodpecker
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/woodpecker/data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: type
+              operator: In
+              values:
+                - agent-a
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: woodpecker-agent-pv-manual
+  labels:
+    type: local
+    app.kubernetes.io/name: woodpecker-agent
+spec:
+  storageClassName: manual-woodpecker
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /mnt/data/woodpecker/agent
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: type
+              operator: In
+              values:
+                - agent-a

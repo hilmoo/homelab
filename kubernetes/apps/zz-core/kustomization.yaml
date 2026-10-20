@@ -12,4 +12,5 @@ resources:
   - ../podinfo/core
   - ../rook-ceph/core
   - ../vaultwarden/core
+  - ../woodpecker/core
   - ../z-univ/core

@@ -64,6 +64,7 @@ spec:
 
     agent:
       replicaCount: 1
+      mapAgentSecret: false
       nodeSelector:
         type: agent-a
 

@@ -2,6 +2,8 @@
 
 version: "3"
 
+dotenv: [.env]
+
 tasks:
   proxmox-i:
     cmd: uv run ansible-playbook proxmox/main.yml -i proxmox/inventory.yml --tags install

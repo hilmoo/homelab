@@ -6,24 +6,6 @@ metadata:
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: forgejo-from-caddy-int
-  namespace: &app forgejo
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: *app
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: caddy-int
-      ports:
-        - port: 3000
-          protocol: TCP
----
-kind: NetworkPolicy
-apiVersion: networking.k8s.io/v1
-metadata:
   name: forgejo-from-caddy-ext
   namespace: &app forgejo
 spec:

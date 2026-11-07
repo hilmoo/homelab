@@ -5,7 +5,7 @@
     "kubectl@1.37.2",
     "fluxcd@2.9.6",
     "sops@3.13.3",
-    "caddy@2.11.7",
+    "caddy@2.11.9",
     "bws@2.1.0",
     "k3sup@0.13.13",
     "kubernetes-helm@4.3.1"

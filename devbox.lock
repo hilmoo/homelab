@@ -1,41 +1,41 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "betterleaks@1.9.0": {
-      "last_modified": "2026-10-10T12:58:50Z",
-      "resolved": "github:NixOS/nixpkgs/ca1659429c950a11a565b5764e37a1b704e17ec8#betterleaks",
+    "betterleaks@1.10.0": {
+      "last_modified": "2026-11-11T14:42:58Z",
+      "resolved": "github:NixOS/nixpkgs/9397dcb09c9598a33509fbc0cce699bd4e6c84d5#betterleaks",
       "source": "devbox-search",
-      "version": "1.9.0",
+      "version": "1.10.0",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/qp55091xh4j32q5djha3ayy13b0lr15j-betterleaks-1.9.0",
+              "path": "/nix/store/9wmgnhw7hw11yqqal2msnkblyvcgsnqy-betterleaks-1.10.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/qp55091xh4j32q5djha3ayy13b0lr15j-betterleaks-1.9.0"
+          "store_path": "/nix/store/9wmgnhw7hw11yqqal2msnkblyvcgsnqy-betterleaks-1.10.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/11b2ni83fhzycykvihccyzq21d1r2vys-betterleaks-1.9.0",
+              "path": "/nix/store/530pf1jd8v05hmm1pbgz20hgcbpiszny-betterleaks-1.10.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/11b2ni83fhzycykvihccyzq21d1r2vys-betterleaks-1.9.0"
+          "store_path": "/nix/store/530pf1jd8v05hmm1pbgz20hgcbpiszny-betterleaks-1.10.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/zgb1rjg59g6qbisdsp9v78bqjdm6d5pb-betterleaks-1.9.0",
+              "path": "/nix/store/6f4ayc3z6zngrx92lq19k9ny800qq8l4-betterleaks-1.10.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/zgb1rjg59g6qbisdsp9v78bqjdm6d5pb-betterleaks-1.9.0"
+          "store_path": "/nix/store/6f4ayc3z6zngrx92lq19k9ny800qq8l4-betterleaks-1.10.0"
         }
       }
     },

@@ -93,9 +93,12 @@
       "enabled": false
     },
     {
-      "description": "Flux upgrades need regenerated manifests (CRDs); review manually, never automerge",
+      "description": "Flux upgrades need regenerated manifests (CRDs); never automerge",
       "matchManagers": [
         "flux"
+      ],
+      "matchDepTypes": [
+        "flux-system"
       ],
       "automerge": false
     },

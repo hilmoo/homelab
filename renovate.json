@@ -93,16 +93,6 @@
       "enabled": false
     },
     {
-      "description": "Flux upgrades need regenerated manifests (CRDs); never automerge",
-      "matchManagers": [
-        "flux"
-      ],
-      "matchDepTypes": [
-        "flux-system"
-      ],
-      "automerge": false
-    },
-    {
       "matchPackageNames": [
         "postgres",
         "redis"
@@ -111,6 +101,15 @@
         "major"
       ],
       "enabled": false
+    },
+    {
+      "description": "Flux upgrades need regenerated manifests (CRDs); never automerge. Keep this LAST so it overrides the automerge rule above",
+      "matchPackageNames": [
+        "fluxcd/flux2",
+        "ghcr.io/fluxcd/flux-manifests"
+      ],
+      "automerge": false,
+      "platformAutomerge": false
     }
   ]
 }

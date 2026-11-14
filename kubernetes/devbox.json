@@ -3,7 +3,7 @@
   "packages": [
     "k9s@0.51.0",
     "kubectl@1.37.2",
-    "fluxcd@2.9.6",
+    "fluxcd@2.10.0",
     "sops@3.13.3",
     "caddy@2.11.9",
     "bws@2.1.0",

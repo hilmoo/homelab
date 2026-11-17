@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+
+spec:
+  template:
+    spec:
+      nodeSelector:
+        type: agent-a
+
+  volumeClaimTemplates:
+    - metadata:
+        name: database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: manual-tex-mongo
+        resources:
+          requests:
+            storage: 10Gi
+        selector:
+          matchLabels:
+            type: local

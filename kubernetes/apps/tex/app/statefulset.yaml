@@ -1,0 +1,189 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: &app tex
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  serviceName: *app
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: agent-a
+
+      # time to flush pending edits
+      terminationGracePeriodSeconds: 60
+      # keep the environment to what is set below (no REDIS_PORT=tcp://... etc.)
+      enableServiceLinks: false
+
+      initContainers:
+        - name: test-mongo
+          image: mongo:8.0.38
+          command:
+            - sh
+            - -c
+            - |
+              until mongosh --quiet --host mongo-tex-0.mongo-tex --eval 'quit(db.hello().isWritablePrimary ? 0 : 1)'; do
+                echo "waiting for mongo primary"; sleep 2
+              done
+
+      containers:
+        - name: tex
+          image: ghcr.io/ayaka-notes/overleaf-pro:6.3.2
+          ports:
+            - containerPort: 80
+              name: web
+
+          env:
+            - name: OVERLEAF_APP_NAME
+              value: AyakaLeaf
+            - name: OVERLEAF_SITE_URL
+              value: https://tex.hilmo.dev
+            - name: OVERLEAF_SECURE_COOKIE
+              value: "true"
+            # loopback + the pod network caddy-ext connects from (k3s default)
+            - name: OVERLEAF_TRUSTED_PROXY_IPS
+              value: loopback,10.42.0.0/16
+            - name: OVERLEAF_MONGO_URL
+              value: mongodb://mongo-tex-0.mongo-tex:27017/sharelatex?replicaSet=overleaf
+            - name: OVERLEAF_REDIS_HOST
+              value: redis-tex
+            - name: REDIS_HOST
+              value: redis-tex
+            - name: ENABLED_LINKED_FILE_TYPES
+              value: project_file,project_output_file,url
+            - name: ENABLE_CONVERSIONS
+              value: "true"
+            - name: EMAIL_CONFIRMATION_DISABLED
+              value: "true"
+
+            # Sandboxed compiles (Docker on the node). HOST_DIR paths are paths ON THE NODE,
+            # see the hostPath volumes below.
+            - name: SANDBOXED_COMPILES
+              value: "true"
+            - name: SANDBOXED_COMPILES_SIBLING_CONTAINERS
+              value: "true"
+            - name: DOCKER_RUNNER
+              value: "true"
+            - name: SANDBOXED_COMPILES_HOST_DIR_COMPILES
+              value: /srv/tex/compiles
+            - name: SANDBOXED_COMPILES_HOST_DIR_OUTPUT
+              value: /srv/tex/output
+            - name: SANDBOXED_COMPILES_HOST_DIR_CACHE
+              value: /srv/tex/cache
+            # each image must be pulled into Docker on the node
+            - name: ALL_TEX_LIVE_DOCKER_IMAGES
+              value: ghcr.io/ayaka-notes/texlive-full:2026.1
+            - name: ALL_TEX_LIVE_DOCKER_IMAGE_NAMES
+              value: TeX Live 2026
+            - name: TEX_LIVE_DOCKER_IMAGE
+              value: ghcr.io/ayaka-notes/texlive-full:2026.1
+
+            # S3 (rook-ceph RGW)
+            - name: OVERLEAF_FILESTORE_BACKEND
+              value: s3
+            - name: OVERLEAF_FILESTORE_TEMPLATE_FILES_BUCKET_NAME
+              value: overleaf-template-files
+            - name: OVERLEAF_FILESTORE_S3_REGION
+              value: us-east-1
+            - name: OVERLEAF_FILESTORE_S3_ENDPOINT
+              value: http://rook-ceph-rgw-store.rook-ceph.svc.cluster.local
+            - name: OVERLEAF_FILESTORE_S3_PATH_STYLE
+              value: "true"
+            - name: OVERLEAF_HISTORY_BACKEND
+              value: s3
+            - name: OVERLEAF_HISTORY_PROJECT_BLOBS_BUCKET
+              value: overleaf-project-blobs
+            - name: OVERLEAF_HISTORY_CHUNKS_BUCKET
+              value: overleaf-chunks
+            - name: OVERLEAF_HISTORY_S3_REGION
+              value: us-east-1
+            - name: OVERLEAF_HISTORY_S3_ENDPOINT
+              value: http://rook-ceph-rgw-store.rook-ceph.svc.cluster.local
+            - name: OVERLEAF_HISTORY_S3_PATH_STYLE
+              value: "true"
+
+            # Git integration (git-bridge) -> also enables MCP and GitHub sync
+            - name: GIT_BRIDGE_ENABLED
+              value: "true"
+            # must be an IP, the image's nginx cannot resolve names (see git-bridge.yaml)
+            - name: GIT_BRIDGE_HOST
+              value: "10.43.100.80"
+            - name: GIT_BRIDGE_PORT
+              value: "8000"
+            - name: V1_HISTORY_URL
+              value: http://tex-internal.tex.svc.cluster.local:3100/api
+
+            # GitHub synchronisation (client id/secret and cipher password come from the secret)
+            - name: GITHUB_SYNC_ENABLED
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: tex-secrets
+
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: 80
+            periodSeconds: 10
+
+          resources:
+            limits:
+              cpu: "2"
+              memory: 3Gi
+            requests:
+              cpu: 200m
+              memory: 1536Mi
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/overleaf
+            - name: compiles
+              mountPath: /var/lib/overleaf/data/compiles
+            - name: output
+              mountPath: /var/lib/overleaf/data/output
+            - name: cache
+              mountPath: /var/lib/overleaf/data/cache
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+
+      volumes:
+        # compile scratch space on the node, same paths as SANDBOXED_COMPILES_HOST_DIR_*
+        - name: compiles
+          hostPath:
+            path: /srv/tex/compiles
+            type: DirectoryOrCreate
+        - name: output
+          hostPath:
+            path: /srv/tex/output
+            type: DirectoryOrCreate
+        - name: cache
+          hostPath:
+            path: /srv/tex/cache
+            type: DirectoryOrCreate
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: manual-tex-data
+        resources:
+          requests:
+            storage: 20Gi

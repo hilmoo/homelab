@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: &app tex
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+---
+# Internal-only: git-bridge calls web's API (3000) and history-v1 (3100) of the tex pod
+apiVersion: v1
+kind: Service
+metadata:
+  name: tex-internal
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: tex
+    app.kubernetes.io/instance: tex
+  ports:
+    - name: web
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+    - name: history
+      port: 3100
+      targetPort: 3100
+      protocol: TCP

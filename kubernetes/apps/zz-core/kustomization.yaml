@@ -11,6 +11,7 @@ resources:
   - ../outline/core
   - ../podinfo/core
   - ../rook-ceph/core
+  - ../tex/core
   - ../vaultwarden/core
   - ../woodpecker/core
   - ../z-univ/core

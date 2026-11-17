@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: manual-tex-redis
+  resources:
+    requests:
+      storage: 2Gi
+  selector:
+    matchLabels:
+      type: local

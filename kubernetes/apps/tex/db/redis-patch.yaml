@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+
+spec:
+  strategy:
+    type: Recreate
+  template:
+    spec:
+      nodeSelector:
+        type: agent-a
+
+      containers:
+        - name: redis
+          # AOF persistence: Redis holds edits not yet written to MongoDB
+          args: ["--appendonly", "yes"]
+          volumeMounts:
+            - name: data
+              mountPath: /data
+
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: redis-data

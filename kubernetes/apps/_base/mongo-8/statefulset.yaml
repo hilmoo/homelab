@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  labels:
+    app.kubernetes.io/name: mongo
+    app.kubernetes.io/instance: mongo
+    app.kubernetes.io/version: "8"
+
+spec:
+  serviceName: mongo
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mongo
+      app.kubernetes.io/instance: mongo
+      app.kubernetes.io/version: "8"
+
+  template:
+    metadata:
+      name: mongo
+      labels:
+        app.kubernetes.io/name: mongo
+        app.kubernetes.io/instance: mongo
+        app.kubernetes.io/version: "8"
+
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:8.0.38
+          args:
+            - --replSet=overleaf
+            - --bind_ip_all
+            - --wiredTigerCacheSizeGB=0.5
+          ports:
+            - containerPort: 27017
+
+          volumeMounts:
+            - name: database
+              mountPath: /data/db
+
+          readinessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 256Mi
+
+  volumeClaimTemplates:
+    - metadata:
+        name: database
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "manual-mongo"
+        resources:
+          requests:
+            storage: 10Gi
+        selector:
+          matchLabels:
+            type: local

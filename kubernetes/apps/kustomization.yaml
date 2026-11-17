@@ -11,6 +11,7 @@ resources:
   - outline
   - podinfo
   - rook-ceph
+  - tex
   - vaultwarden
   - woodpecker
   # - z-univ

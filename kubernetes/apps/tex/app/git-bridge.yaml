@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: git-bridge
+spec:
+  type: ClusterIP
+  # Fixed ClusterIP (k3s service CIDR 10.43.0.0/16), used as GIT_BRIDGE_HOST: the nginx in the
+  # tex image proxies /git/ with Docker's DNS resolver (127.0.0.11), which does not exist here.
+  clusterIP: 10.43.100.80
+  selector:
+    app.kubernetes.io/name: git-bridge
+    app.kubernetes.io/instance: git-bridge
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: &app git-bridge
+  labels:
+    app.kubernetes.io/name: *app
+    app.kubernetes.io/instance: *app
+spec:
+  serviceName: *app
+  # git-bridge must run as a singleton
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: *app
+      app.kubernetes.io/instance: *app
+  template:
+    metadata:
+      name: *app
+      labels:
+        app.kubernetes.io/name: *app
+        app.kubernetes.io/instance: *app
+
+    spec:
+      nodeSelector:
+        type: agent-a
+
+      # the Service would inject GIT_BRIDGE_PORT=tcp://..., which git-bridge reads as its port
+      enableServiceLinks: false
+
+      containers:
+        - name: git-bridge
+          image: ghcr.io/ayaka-notes/overleaf-pro/git-bridge:6.3.2 # same tag as overleaf-pro
+          command: ["/server-pro-start.sh"]
+          securityContext:
+            runAsUser: 0
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: GIT_BRIDGE_API_BASE_URL
+              value: http://tex-internal.tex.svc.cluster.local:3000/api/v0/
+            - name: GIT_BRIDGE_OAUTH2_SERVER
+              value: http://tex.tex.svc.cluster.local
+            - name: GIT_BRIDGE_POSTBACK_BASE_URL
+              value: http://git-bridge.tex.svc.cluster.local:8000
+            - name: GIT_BRIDGE_ROOT_DIR
+              value: /data/git-bridge
+
+          volumeMounts:
+            - name: git-bridge-data
+              mountPath: /data/git-bridge
+
+          resources:
+            limits:
+              cpu: 500m
+              memory: 768Mi
+            requests:
+              cpu: 50m
+              memory: 256Mi
+
+  volumeClaimTemplates:
+    - metadata:
+        name: git-bridge-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: manual-tex-git-bridge
+        resources:
+          requests:
+            storage: 10Gi

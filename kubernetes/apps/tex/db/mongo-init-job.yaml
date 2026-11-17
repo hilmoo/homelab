@@ -1,0 +1,33 @@
+# Initiates the single-member replica set once (AyakaLeaf needs transactions).
+# Safe to re-run: does nothing when the set already exists.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-init-replica-set
+spec:
+  backoffLimit: 20
+  template:
+    spec:
+      restartPolicy: OnFailure
+      nodeSelector:
+        type: agent-a
+      containers:
+        - name: init
+          image: mongo:8.0.38
+          command:
+            - mongosh
+            - --quiet
+            - --host=mongo-tex-0.mongo-tex
+            - --eval
+            - |
+              try {
+                rs.status()
+                print('replica set already initiated')
+              } catch (e) {
+                rs.initiate({
+                  _id: 'overleaf',
+                  members: [
+                    { _id: 0, host: 'mongo-tex-0.mongo-tex.tex.svc.cluster.local:27017' },
+                  ],
+                })
+              }

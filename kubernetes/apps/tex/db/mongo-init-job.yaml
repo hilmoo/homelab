@@ -13,7 +13,7 @@ spec:
         type: agent-a
       containers:
         - name: init
-          image: mongo:8.0.38
+          image: mongo # replaced from the base StatefulSet (kustomization.yaml)
           command:
             - mongosh
             - --quiet

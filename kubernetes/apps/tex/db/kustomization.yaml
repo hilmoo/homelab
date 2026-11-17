@@ -11,3 +11,16 @@ nameSuffix: -tex
 patches:
   - path: mongo-patch.yaml
   - path: redis-patch.yaml
+
+# keep the init job on the exact mongo image of the base StatefulSet
+replacements:
+  - source:
+      kind: StatefulSet
+      name: mongo
+      fieldPath: spec.template.spec.containers.[name=mongo].image
+    targets:
+      - select:
+          kind: Job
+          name: mongo-init-replica-set
+        fieldPaths:
+          - spec.template.spec.containers.[name=init].image

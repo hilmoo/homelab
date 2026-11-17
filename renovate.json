@@ -93,12 +93,24 @@
       "enabled": false
     },
     {
-      "description": "Shared DB bases (postgres, redis, mongo, ...): majors need manual migration, so never bump them automatically",
-      "matchFileNames": [
-        "kubernetes/apps/_base/**"
+      "description": "Database images used anywhere (init containers, sidecars, ...): majors need manual migration",
+      "matchPackageNames": [
+        "postgres",
+        "redis"
       ],
       "matchUpdateTypes": [
         "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "MongoDB: stay on patches only. Client drivers must support the server version, and a newer server version cannot be rolled back",
+      "matchPackageNames": [
+        "mongo"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
       ],
       "enabled": false
     },

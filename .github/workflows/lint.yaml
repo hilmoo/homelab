@@ -14,23 +14,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # devbox.json is the single source of truth, Renovate keeps it up to date
       - name: Install yamllint
-        run: pipx install yamllint==1.37.1
+        run: |
+          version=$(jq -r '.packages[] | select(startswith("yamllint@")) | split("@")[1]' devbox.json)
+          test -n "$version"
+          pipx install "yamllint==${version}"
       - name: Run yamllint
         run: yamllint --strict -c=.yamllint.yaml .
 
   secrets:
     name: betterleaks
     runs-on: ubuntu-latest
-    env:
-      BETTERLEAKS_VERSION: 1.8.1
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      # devbox.json is the single source of truth, Renovate keeps it up to date
+      - name: Read betterleaks version from devbox.json
+        run: |
+          version=$(jq -r '.packages[] | select(startswith("betterleaks@")) | split("@")[1]' devbox.json)
+          test -n "$version"
+          echo "BETTERLEAKS_VERSION=${version}" >> "$GITHUB_ENV"
       - name: Install betterleaks
         run: |
           curl -sSfL "https://github.com/betterleaks/betterleaks/releases/download/v${BETTERLEAKS_VERSION}/betterleaks_${BETTERLEAKS_VERSION}_linux_x64.tar.gz" \
             | tar -xz -C /usr/local/bin betterleaks
       - name: Scan git history for secrets
-        run: betterleaks git --redact --verbose --no-banner .
+        run: betterleaks git --redact --verbose --no-banner -c .betterleaks.toml .

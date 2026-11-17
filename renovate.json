@@ -93,9 +93,9 @@
       "enabled": false
     },
     {
-      "matchPackageNames": [
-        "postgres",
-        "redis"
+      "description": "Shared DB bases (postgres, redis, mongo, ...): majors need manual migration, so never bump them automatically",
+      "matchFileNames": [
+        "kubernetes/apps/_base/**"
       ],
       "matchUpdateTypes": [
         "major"

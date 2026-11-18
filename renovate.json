@@ -115,6 +115,14 @@
       "enabled": false
     },
     {
+      "description": "Ceph image upgrades restart the mon/OSD on a single-node cluster (brief outage); never automerge. Keep this after the automerge rule above",
+      "matchPackageNames": [
+        "quay.io/ceph/ceph"
+      ],
+      "automerge": false,
+      "platformAutomerge": false
+    },
+    {
       "description": "Flux upgrades need regenerated manifests (CRDs); never automerge. Keep this LAST so it overrides the automerge rule above",
       "matchPackageNames": [
         "fluxcd/flux2",

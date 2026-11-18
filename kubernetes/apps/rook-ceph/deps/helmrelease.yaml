@@ -1,0 +1,54 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: rook-ceph
+spec:
+  interval: 30m
+
+  chart:
+    spec:
+      chart: rook-ceph
+      version: v1.21.2
+      interval: 2h
+      sourceRef:
+        kind: HelmRepository
+        name: rook-release
+
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
+
+  values:
+    # CRDs ship with the chart, so they always match the operator version
+    crds:
+      enabled: true
+
+    # The operator needs the csi.ceph.io CRDs (CephConnection, ClientProfile)
+    # even though no CSI driver is used here, so keep the CSI operator chart.
+    csi:
+      installCsiOperator: true
+
+    logLevel: INFO
+    currentNamespaceOnly: false
+    reconcileConcurrentClusters: 1
+    unreachableNodeTolerationSeconds: 5
+    allowLoopDevices: false
+    monRunAsRoot: false
+    deleteUnusedCrushRules: true
+    enableDiscoveryDaemon: false
+    discoveryDaemonInterval: 60m
+    cephCommandsTimeoutSeconds: "15"
+    disableDeviceHotplug: false
+    enforceHostNetwork: false
+    enableOBCWatchOperatorNamespace: true
+
+    resources:
+      limits:
+        cpu: 1
+        memory: 512Mi
+      requests:
+        cpu: 200m
+        memory: 128Mi

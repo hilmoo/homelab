@@ -47,7 +47,7 @@ spec:
 
       containers:
         - name: git-bridge
-          image: ghcr.io/ayaka-notes/overleaf-pro/git-bridge:6.3.2 # same tag as overleaf-pro
+          image: ghcr.io/ayaka-notes/overleaf-pro/git-bridge:6.3.4 # same tag as overleaf-pro
           command: ["/server-pro-start.sh"]
           securityContext:
             runAsUser: 0

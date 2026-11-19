@@ -15,7 +15,7 @@ metadata:
 spec:
   dataDirHostPath: /mnt/data/rook
   cephVersion:
-    image: quay.io/ceph/ceph:v20.2.4
+    image: quay.io/ceph/ceph:v20.2.5
   mon:
     count: 1
     allowMultiplePerNode: true
